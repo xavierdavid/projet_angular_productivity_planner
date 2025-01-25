@@ -8,6 +8,8 @@ describe('HomeBannerDumbComponent', () => {
   let component: HomeBannerDumbComponent;
   let fixture: ComponentFixture<HomeBannerDumbComponent>;
   let title: DebugElement;
+  let description: DebugElement;
+  let button: DebugElement;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -17,13 +19,15 @@ describe('HomeBannerDumbComponent', () => {
     fixture = TestBed.createComponent(HomeBannerDumbComponent);
     component = fixture.componentInstance;
     fixture.componentRef.setInput('title', 'expectedTitle');
-    fixture.componentRef.setInput('description', 'expectedTDescription');
+    fixture.componentRef.setInput('description', 'expectedDescription');
     fixture.componentRef.setInput('button', 'expectedButton');
     fixture.detectChanges();
   });
 
   beforeEach(() => {
     title = fixture.debugElement.query(By.css('[data-testid=banner-title]'));
+    description = fixture.debugElement.query(By.css('[data-testid=banner-description]'));
+    button = fixture.debugElement.query(By.css('[data-testid=banner-button]'));
   });
 
   it('should create', () => {
@@ -33,8 +37,16 @@ describe('HomeBannerDumbComponent', () => {
   it('should display title', ()=> {
     expect(title.nativeElement.textContent).toContain('expectedTitle');
   });
+  it('should display description', ()=> {
+    expect(description.nativeElement.textContent).toContain('expectedDescription');
+  });
+  it('should display button', ()=> {
+    expect(button.nativeElement.textContent).toContain('expectedButton');
+  });
+  it('should trigger event on button click', ()=> {
+    jest.spyOn(component.clicked, 'emit');
+    button.nativeElement.click();
+    expect(component.clicked.emit).toHaveBeenNthCalledWith(1);
+  });
   
-  it.todo('should display description');
-  it.todo('should display button');
-  it.todo('should trigger event on button click');
 });
