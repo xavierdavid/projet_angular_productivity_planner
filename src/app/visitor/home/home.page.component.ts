@@ -11,17 +11,17 @@ export class HomePageComponent {
   featureCardList = signal([
     {
       name: 'Planifier sa semaine',
-      icon: 'calendar',
+      icon: 'calendar-heart-fill',
       description: 'Visibilité sur les 7 prochains jours'
     },
     {
       name: 'Atteindre ses objectifs',
-      icon: 'Description 2',
+      icon: 'trophy-fill',
       description: 'Priorisation des tâches'
     },
     {
       name: 'Analyser sa productivité',
-      icon: 'Description 3r',
+      icon: 'bar-chart-line-fill',
       description: 'Visualiser le travail accompli'
     }
   ]);  
