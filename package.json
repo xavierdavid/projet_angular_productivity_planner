@@ -27,6 +27,7 @@
     "@angular/platform-browser": "^19.1.5",
     "@angular/platform-browser-dynamic": "^19.1.5",
     "@angular/router": "^19.1.5",
+    "@ngrx/signals": "^19.0.1",
     "@reactivex/rxjs": "^6.6.7",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
