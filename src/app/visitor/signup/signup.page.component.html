@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-4">
       <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
@@ -8,12 +8,15 @@
           <input 
             #nameField="ngModel"
             [(ngModel)]="name"
-            type="name"
+            type="text"
             name="name" 
             class="form-control" 
             id="name"
             required
-            maxlength="50"
+            minlength="3"
+            maxlength="20"
+            pattern="[a-zA-Z]+"
+            [class.is-invalid]="nameField.dirty && nameField.invalid"
           >
         </div>
         @if(nameField.dirty && nameField.hasError('required')) {
@@ -23,35 +26,49 @@
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
           <input
+            #emailField="ngModel"
+            [(ngModel)]="email"
             type="email"
+            name="email"
             class="form-control"
             id="email"
             autocomplete="email"
+            required
+            [class.is-invalid]="emailField.dirty && emailField.invalid"
           >
         </div>
         <!-- PASSWORD -->
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
           <input 
+            #passwordField="ngModel"
+            [(ngModel)]="password"
             type="password"
+            name="password"
             class="form-control" 
             id="password"
-            autocompete="new-password"
+            autocomplete="new-password"
+            required
+            [class.is-invalid]="passwordField.dirty && passwordField.invalid"
           >
         </div>
         <!-- CONFIRM PASSWORD -->
         <div class="mb-3">
           <label for="confirm-password" class="form-label">Confirm password</label>
-          <input type="password" class="form-control" id="confirm-password">
+          <input
+            #confirmPasswordField="ngModel"
+            [(ngModel)]="confirmPassword"
+            type="password"
+            name="confirmPassword"
+            class="form-control"
+            id="confirm-password"
+            autocomplete="new-password"
+            required
+            [class.is-invalid]="confirmPasswordField.dirty && confirmPasswordField.invalid"
+          >
         </div>
         <!-- SUBMIT -->
-        <button 
-          type="submit" 
-          class="btn btn-primary"
-          [disabled]="signupForm.invalid"
-        >
-          Submit
-        </button>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="signupForm.invalid &&isPasswordMatchValid">Submit</button>
       </form>
     </div>
   </div>
