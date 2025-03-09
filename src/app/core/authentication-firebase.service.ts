@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { AuthenticationService, LoginResponse, RegisterResponse } from './authentication.service';
 
 /**
- * Represents the payload of the response received when registering a new user in Firebase
+ * Contrat de données de la réponse attendue suite à l'inscription d'un nouvel utilisateur sur Firebase
  * 
  * @see https://firebase.google.com/docs/reference/rest/auth?hl=fr#section-create-email-password
  */
@@ -20,8 +20,8 @@ interface FirebaseResponseSignin {
   registered: boolean;
 }
 
-  /**
- * Represents the payload of the response received when authenticating a registered user in Firebase
+/**
+ * Contrat de données de la réponse attendue suite à l'authentification d'un utilisateur déjà inscrit sur Firebase
  * 
  * @see https://firebase.google.com/docs/reference/rest/auth?hl=fr#section-create-email-password
  */
@@ -34,13 +34,14 @@ interface FirebaseResponseSignup {
   refreshToken: string;
 } 
 
+// Adaptateur spécifique pour établir la liaison de Firebase avec le port d'entrée AuthenticationService
 @Injectable()
 export class AuthenticationFirebaseService implements AuthenticationService {
 
   // Injection du service HTTPClient dans la propriété de classe
   private readonly http = inject(HttpClient);
 
-  // Requête d'inscription d'un nouvel utilisateur
+  // Requête d'inscription d'un nouvel utilisateur sur Firebase
   register(email:string, password:string): Observable<RegisterResponse> {
     // URL de requête d'inscription d'un nouvel utilisateur
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseConfig.apiKey}`
@@ -57,7 +58,7 @@ export class AuthenticationFirebaseService implements AuthenticationService {
     );
   }
 
-  // Requête d'authentification d'un utilisateur inscrit
+  // Requête d'authentification d'un utilisateur déjà inscrit sur Firebase
   login(email: string, password: string): Observable<LoginResponse> {
     // URL de requête d'authentification d'un utilisateur inscrit
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.firebaseConfig.apiKey}`;
@@ -74,26 +75,4 @@ export class AuthenticationFirebaseService implements AuthenticationService {
       }))
     );
   }
-
-  /* // Requête de sauvegarde d'un utilisateur authentifié
-  save(email: string, userId: string, bearerToken: string): Observable<unknown> {
-    // URL de requête de sauvegarde d'un utilisateur authentifié
-    const baseUrl = `https://firestore.googleapis.com/v1/projects/${environment.firebaseConfig.projectId}/databases/(default)/documents`;
-    const userFirestoreCollectionId = 'users';
-    const url = `${baseUrl}/${userFirestoreCollectionId}?key=${environment.firebaseConfig.apiKey}&documentId=${userId}`;
-    // Body de la requête
-    const body = {
-      fields: {
-        email: { stringValue: email },
-      }
-    };
-    // Headers de la requête
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${bearerToken}`
-    });
-    // Options de la requête intègrant les headers
-    const options = {headers};
-    // Requête POST
-    return this.http.post(url, body, options);
-  } */
 }

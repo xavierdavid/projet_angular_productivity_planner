@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AuthenticationFirebaseService } from './authentication-firebase.service';
 
+// Contrat de données de la réponse attendue suite à l'inscription d'un nouvel utilisateur
 export interface RegisterResponse {
   jwtToken: string;
   jwtRefreshToken: string;
@@ -8,6 +10,7 @@ export interface RegisterResponse {
   userId: string;
 } 
 
+// Contrat de données de la réponse attendue suite à la connexion de l'utilisateur
 export interface LoginResponse {
   jwtToken: string;
   jwtRefreshToken: string;
@@ -16,7 +19,11 @@ export interface LoginResponse {
   isRegistered: boolean;
 }
 
-@Injectable()
+// Port d'entrée pour gérer la liaison avec les API Rest
+@Injectable({
+  providedIn: 'root',
+  useClass: AuthenticationFirebaseService,
+})
 export abstract class AuthenticationService {
 
   // Requête d'inscription d'un nouvel utilisateur

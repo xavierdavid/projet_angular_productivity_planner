@@ -1,10 +1,12 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-4">
-      <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+      <!-- Directive ngForm permettant de créer un formulaire Angular -->
+      <form (ngSubmit)="onSubmit()" #form="ngForm">
         <!-- NAME -->
         <div class="mb-3">
           <label for="name" class="form-label">Name</label>
+          <!-- Directive ngModel permettant de lier le champ de formulaire à la propriété 'name' du composant via un signal -->
           <input 
             #nameField="ngModel"
             [(ngModel)]="name"
@@ -68,7 +70,7 @@
           >
         </div>
         <!-- SUBMIT -->
-        <button type="submit" class="btn btn-primary w-100" [disabled]="signupForm.invalid &&isPasswordMatchValid">Submit</button>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid">Submit</button>
       </form>
     </div>
   </div>
