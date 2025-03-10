@@ -12,11 +12,14 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
     "experimentalDecorators": true,
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "ES2022",
+    "lib": ["ES2022", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -27,5 +30,5 @@
       // The category to use for any diagnostics not listed in `checks` above.
       "defaultCategory": "error"
     } 
-  }
+  },
 }
