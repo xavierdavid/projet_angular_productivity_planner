@@ -7,7 +7,8 @@
         <div class="mb-3">
           <label for="name" class="form-label">Name</label>
           <!-- Directive ngModel permettant de lier le champ de formulaire à la propriété 'name' du composant via un signal -->
-          <input 
+          <input
+            data-testid="name" 
             #nameField="ngModel"
             [(ngModel)]="name"
             type="text"
@@ -22,12 +23,28 @@
           >
         </div>
         @if(nameField.dirty && nameField.hasError('required')) {
-        <div class="form-text text-danger">Name is required.</div>
+          <div class="form-text text-danger" data-testid="error-name-required">Name is required.</div>
+        }
+        @if(nameField.dirty && nameField.hasError('minlength')) {
+          <div class="form-text text-danger" data-testid="error-name-minlength">
+            Name must contain at least {{ nameField.getError('minlength').requiredLength }} caracters.
+          </div>
+        }
+        @if(nameField.dirty && nameField.hasError('maxlength')) {
+          <div class="form-text text-danger" data-testid="error-name-maxlength">
+            Name must contain maximum {{ nameField.getError('maxlength').requiredLength }} caracters.
+          </div>
+        }
+        @if(nameField.dirty && nameField.hasError('pattern')) {
+          <div class="form-text text-danger" data-testid="error-name-pattern">
+            Name must contain only letters.
+          </div>
         }
         <!-- EMAIL -->
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
           <input
+            data-testid="email"
             #emailField="ngModel"
             [(ngModel)]="email"
             type="email"
@@ -43,6 +60,7 @@
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
           <input 
+            data-testid="password"
             #passwordField="ngModel"
             [(ngModel)]="password"
             type="password"
@@ -58,6 +76,7 @@
         <div class="mb-3">
           <label for="confirm-password" class="form-label">Confirm password</label>
           <input
+            data-testid="confirm-password"
             #confirmPasswordField="ngModel"
             [(ngModel)]="confirmPassword"
             type="password"
@@ -70,7 +89,7 @@
           >
         </div>
         <!-- SUBMIT -->
-        <button type="submit" class="btn btn-primary w-100" [disabled]="form.invalid">Submit</button>
+        <button data-testid="submit-button" type="submit" class="btn btn-primary w-100" [disabled]="form.invalid">Submit</button>
       </form>
     </div>
   </div>
