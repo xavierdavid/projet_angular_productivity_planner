@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthenticationFirebaseService } from './authentication-firebase.service';
+import { AuthenticationFirebaseService } from '../adapter/authentication-firebase.service';
 
 // Contrat de données de la réponse attendue suite à l'inscription d'un nouvel utilisateur
 export interface RegisterResponse {

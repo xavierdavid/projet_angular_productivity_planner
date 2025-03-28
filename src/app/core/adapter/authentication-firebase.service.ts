@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs';
 
-import { AuthenticationService, LoginResponse, RegisterResponse } from './authentication.service';
+import { AuthenticationService, LoginResponse, RegisterResponse } from '../port/authentication.service';
 
 /**
  * Contrat de données de la réponse attendue suite à l'inscription d'un nouvel utilisateur sur Firebase
@@ -32,6 +32,7 @@ interface FirebaseResponseSignup {
   idToken: string;
   localId: string;
   refreshToken: string;
+  registered: boolean;
 } 
 
 // Adaptateur spécifique pour établir la liaison de Firebase avec le port d'entrée AuthenticationService
