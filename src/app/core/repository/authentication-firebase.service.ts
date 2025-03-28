@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map } from 'rxjs';
 
 import { AuthenticationService, LoginResponse, RegisterResponse } from './authentication.service';
 
@@ -39,7 +39,7 @@ interface FirebaseResponseSignup {
 export class AuthenticationFirebaseService implements AuthenticationService {
 
   // Injection du service HTTPClient dans la propriété de classe
-  private readonly http = inject(HttpClient);
+  readonly #http = inject(HttpClient);
 
   // Requête d'inscription d'un nouvel utilisateur sur Firebase
   register(email:string, password:string): Observable<RegisterResponse> {
@@ -48,8 +48,8 @@ export class AuthenticationFirebaseService implements AuthenticationService {
     // Body de la requête 
     const body = {email,password,"returnSecureToken":true};
     // Requête POST
-    return this.http.post<FirebaseResponseSignup>(url,body).pipe(
-      map(response => ({
+    return this.#http.post<FirebaseResponseSignup>(url,body).pipe(
+      map((response) => ({
         jwtToken: response.idToken,
         jwtRefreshToken: response.refreshToken,
         expiresIn: response.expiresIn,
@@ -65,7 +65,7 @@ export class AuthenticationFirebaseService implements AuthenticationService {
     // Body de la requête
     const body = {email, password, returnSecureToken: true};
     // Requête POST
-    return this.http.post<FirebaseResponseSignin>(url, body).pipe(
+    return this.#http.post<FirebaseResponseSignin>(url, body).pipe(
       map(response => ({
         jwtToken: response.idToken,
         jwtRefreshToken: response.refreshToken,
