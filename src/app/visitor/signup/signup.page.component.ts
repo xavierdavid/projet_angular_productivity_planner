@@ -21,8 +21,8 @@ export class SignupPageComponent {
   readonly confirmPassword = signal('');
 
   // Propriété calculée 'computed' utilisant les signaux pour vérifier que les deux mots de passe sont identiques
-  readonly isPasswordMatchValid = computed(
-    () => this.password === this.confirmPassword
+  readonly isPasswordMatch = computed(
+    () => this.password() === this.confirmPassword()
   );
 
   // Gestion de la soumission du formulaire d'inscription
