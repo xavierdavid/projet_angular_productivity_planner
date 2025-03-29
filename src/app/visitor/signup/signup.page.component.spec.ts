@@ -42,7 +42,7 @@ describe('SignupPageComponent', () => {
   });
 
   describe('when page load', () => {
-    it('should diplay fields name, email, password and confirm password', () => {
+    it('should display fields name, email, password and confirm password', () => {
       expect(name).toBeTruthy();
       expect(email).toBeTruthy();
       expect(password).toBeTruthy();
