@@ -155,7 +155,7 @@ describe('SignupPageComponent', () => {
       const error = fixture.debugElement.query(By.css('[data-testid="error-password-pattern"]'));
       const errorMessage = error.nativeElement.textContent;
 
-      expect(errorMessage).toContain('Password must contain at least one uppercase letter, one digit and one special character (@$!%*?&).');
+      expect(errorMessage).toContain('Password must contain at least one uppercase letter, one lowercase letter, one digit and one special character (@$!%*?&).');
     });
 
     it('should display error message when field do not contain at least 1 lowercase character', () => {
