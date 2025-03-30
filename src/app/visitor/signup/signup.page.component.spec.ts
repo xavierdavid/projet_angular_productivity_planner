@@ -9,7 +9,6 @@ import { DebugElement } from '@angular/core';
 describe('SignupPageComponent', () => {
   let component: SignupPageComponent;
   let fixture: ComponentFixture<SignupPageComponent>;
-
   let name: DebugElement;
   let email: DebugElement;
   let password: DebugElement;
