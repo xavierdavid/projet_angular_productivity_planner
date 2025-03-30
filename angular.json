@@ -72,7 +72,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
+                  "with": "src/environments/environment.development.ts"
                 }
               ]
             }
@@ -110,9 +110,9 @@
     }
   },
   "cli": {
-    "analytics": false,
     "schematicCollections": [
-      "angular-eslint"
-    ]
+      "@angular-eslint/schematics"
+    ],
+    "analytics": false
   }
 }
