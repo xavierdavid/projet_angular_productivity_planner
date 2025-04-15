@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs';
-
+import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { AuthenticationService, LoginResponse, RegisterResponse } from '../port/authentication.service';
+import { EmailAlreadyTakenError } from '@app/visitor/signup/domain/email-already-taken.error';
+
 
 /**
  * Contrat de données de la réponse attendue suite à l'inscription d'un nouvel utilisateur sur Firebase
@@ -55,7 +55,14 @@ export class AuthenticationFirebaseService implements AuthenticationService {
         jwtRefreshToken: response.refreshToken,
         expiresIn: response.expiresIn,
         userId: response.localId,
-      }))
+      })),
+      // Interception d'éventuelles erreurs 'métier' envoyées par le backend
+      catchError(error => {
+        if(error.error.error.message === 'EMAIL_EXISTS') {
+          return of(new EmailAlreadyTakenError(email));
+        } 
+        return throwError(() => error);
+      })
     );
   }
 
@@ -77,3 +84,4 @@ export class AuthenticationFirebaseService implements AuthenticationService {
     );
   }
 }
+

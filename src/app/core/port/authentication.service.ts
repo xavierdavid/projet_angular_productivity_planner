@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthenticationFirebaseService } from '../adapter/authentication-firebase.service';
+import { EmailAlreadyTakenError } from '@app/visitor/signup/domain/email-already-taken.error';
+
 
 // Contrat de données de la réponse attendue suite à l'inscription d'un nouvel utilisateur
-export interface RegisterResponse {
+export type RegisterResponse = RegisterPayload | EmailAlreadyTakenError;
+interface RegisterPayload {
   jwtToken: string;
   jwtRefreshToken: string;
   expiresIn: string;
@@ -11,7 +14,8 @@ export interface RegisterResponse {
 } 
 
 // Contrat de données de la réponse attendue suite à la connexion de l'utilisateur
-export interface LoginResponse {
+export type LoginResponse = LoginPayload;
+interface LoginPayload {
   jwtToken: string;
   jwtRefreshToken: string;
   expiresIn: string;
@@ -26,8 +30,8 @@ export interface LoginResponse {
 })
 export abstract class AuthenticationService {
 
-  // Requête d'inscription d'un nouvel utilisateur
-  abstract register(email:string, password:string): Observable<RegisterResponse>
+  // Requête d'inscription d'un nouvel utilisateur - Retourne une RegisterResponse ou une EmailAlreadyTakenError
+  abstract register(email:string, password:string): Observable<RegisterResponse|EmailAlreadyTakenError>;
 
   // Requête d'authentification d'un utilisateur inscrit
   abstract login(email: string, password: string): Observable<LoginResponse>

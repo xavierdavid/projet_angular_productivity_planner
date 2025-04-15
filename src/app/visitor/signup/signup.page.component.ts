@@ -1,8 +1,9 @@
 import { Component, computed, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthenticationService } from '../../core/port/authentication.service';
-import { UserStore } from '../../core/store/user.store';
-import { Visitor } from '../../core/entity/user.interface';
+import { Visitor } from '@app/core/entity/user.interface';
+import { RegisterUserUseCase } from './domain/register-user.use-case';
+import { EmailAlreadyTakenError } from './domain/email-already-taken.error';
+
 
 @Component({
   imports: [FormsModule],
@@ -11,14 +12,16 @@ import { Visitor } from '../../core/entity/user.interface';
 })
 export class SignupPageComponent {
   // Injection de dépendances et de services
-  readonly authenticationService = inject(AuthenticationService);
-  readonly store = inject(UserStore);
+  readonly #registerUserUseCase = inject(RegisterUserUseCase);
   
   // Propriétés d'entrée - Signaux
+  readonly isLoading = signal(false);
   readonly name = signal('');
   readonly email = signal('');
   readonly password = signal('');
   readonly confirmPassword = signal('');
+  readonly emailAlreadyTakenError = signal<EmailAlreadyTakenError|null>(null);
+  readonly isEmailAlreadyTaken = computed(() => this.emailAlreadyTakenError()?.email === this.email());
 
   // Propriété calculée 'computed' utilisant les signaux pour vérifier que les deux mots de passe sont identiques
   readonly isPasswordMatch = computed(
@@ -27,13 +30,22 @@ export class SignupPageComponent {
 
   // Gestion de la soumission du formulaire d'inscription
   onSubmit() {
-    // Création d'un nouvel objet User (Visitor non encore authentifié)
-    const visitor: Visitor = {
+    this.isLoading.set(true);
+    // On récupère le visiteur ayant soumis le formulaire
+    const visitor : Visitor = {
       name: this.name(),
       email: this.email(),
-      password: this.password(),
-    } 
-    // Enregistrement du nouvel utilisateur (Visitor) dans le Gobal Store
-    this.store.register(visitor);
+      password: this.password()
+    }
+    // On exécute le RegisterUserUseCase
+    this.#registerUserUseCase.execute(visitor)
+    // On attrappe les éventuelles erreurs
+    .catch(error => {
+      this.isLoading.set(false);
+      const isEmailAlreadyTaken = error instanceof EmailAlreadyTakenError;
+      if(isEmailAlreadyTaken) {
+        this.emailAlreadyTakenError.set(error);
+      }
+    });
   }
 }
