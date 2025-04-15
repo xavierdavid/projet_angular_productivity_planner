@@ -1,6 +1,5 @@
 import { Component, computed, signal, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserStore } from '../../core/store/user.store';
 import { Visitor } from '../../core/entity/user.interface';
 import { RegisterUserUseCase } from './domain/register-user.use-case';
 import { Router } from '@angular/router';
@@ -14,11 +13,11 @@ import { EmailAlreadyTakenError } from './domain/email-already-taken.error';
 })
 export class SignupPageComponent {
   // Injection de dépendances et de services
-  readonly store = inject(UserStore);
   readonly #registerUserUseCase = inject(RegisterUserUseCase);
   readonly #router = inject(Router);
   
   // Propriétés d'entrée - Signaux
+  readonly isLoading = signal(false);
   readonly name = signal('');
   readonly email = signal('');
   readonly password = signal('');
@@ -33,6 +32,7 @@ export class SignupPageComponent {
 
   // Gestion de la soumission du formulaire d'inscription
   onSubmit() {
+    this.isLoading.set(true);
     // On récupère le visiteur ayant soumis le formulaire
     const visitor : Visitor = {
       name: this.name(),
@@ -44,6 +44,7 @@ export class SignupPageComponent {
     // On redirige l'utilisateur vers son dashboard
     .then(() => this.#router.navigate(['/app/dashboard']))
     .catch(error => {
+      this.isLoading.set(false);
       const isEmailAlreadyTaken = error instanceof EmailAlreadyTakenError;
       if(isEmailAlreadyTaken) {
         this.emailAlreadyTakenError.set(error);
