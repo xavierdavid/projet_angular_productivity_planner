@@ -19,7 +19,7 @@ export class RegisterUserUseCase {
   readonly #userStore = inject(UserStore);
   
   // On exécute la requête asynchrone d'inscription du visiteur - Retourne un utilisateur
-  async execute(visitor: Visitor): Promise<User> {
+  async execute(visitor: Visitor): Promise<void> {
     // Etape 1 - Inscription d'un nouveau visiteur : la requête vers le backend retourne une réponse de type RegisterResponse
     const {name, email, password} = visitor;
     const registerResponse = await firstValueFrom(this.#authenticationService.register(email, password));
@@ -42,8 +42,5 @@ export class RegisterUserUseCase {
 
     // Etape 5 - On sauvegarde l'utilisateur dans le UserStore (Global Store)
     this.#userStore.register(user);
-    
-    // Etape 6 - On retourne l'utilisateur
-    return user;
   }
 }

@@ -1,9 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { UserService } from '../port/user.service';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { ignoreElements } from 'rxjs';
 import { User } from '../entity/user.interface';
 
 @Injectable()
@@ -41,6 +40,6 @@ export class UserFirebaseService implements UserService {
     // Options de la requête intègrant les headers
     const options = {headers};
     // Requête POST (on ignore les informations de retour)
-    return this.#http.post(url, body, options).pipe(ignoreElements());
+    return this.#http.post(url, body, options).pipe(map(()=> undefined));
   }
 }
