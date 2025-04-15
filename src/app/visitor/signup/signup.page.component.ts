@@ -22,8 +22,8 @@ export class SignupPageComponent {
   readonly email = signal('');
   readonly password = signal('');
   readonly confirmPassword = signal('');
-  readonly emailAlreadyTakenErrorMessage = signal('');
-  readonly isEmailAlreadyTaken = computed(() => this.emailAlreadyTakenErrorMessage() !== '');
+  readonly emailAlreadyTakenError = signal<EmailAlreadyTakenError|null>(null);
+  readonly isEmailAlreadyTaken = computed(() => this.emailAlreadyTakenError()?.email === this.email());
 
   // Propriété calculée 'computed' utilisant les signaux pour vérifier que les deux mots de passe sont identiques
   readonly isPasswordMatch = computed(
@@ -45,7 +45,7 @@ export class SignupPageComponent {
     .catch(error => {
       const isEmailAlreadyTaken = error instanceof EmailAlreadyTakenError;
       if(isEmailAlreadyTaken) {
-        this.emailAlreadyTakenErrorMessage.set(error.message);
+        this.emailAlreadyTakenError.set(error);
       }
     });
   }
