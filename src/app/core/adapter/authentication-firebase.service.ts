@@ -1,10 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
+import { AuthenticationService, EmailAlreadyTakenError, LoginResponse, RegisterResponse } from '../port/authentication.service';
 
-import { AuthenticationService, LoginResponse, RegisterResponse } from '../port/authentication.service';
 
 /**
  * Contrat de données de la réponse attendue suite à l'inscription d'un nouvel utilisateur sur Firebase
@@ -43,7 +42,7 @@ export class AuthenticationFirebaseService implements AuthenticationService {
   readonly #http = inject(HttpClient);
 
   // Requête d'inscription d'un nouvel utilisateur sur Firebase
-  register(email:string, password:string): Observable<RegisterResponse> {
+  register(email:string, password:string): Observable<RegisterResponse|EmailAlreadyTakenError> {
     // URL de requête d'inscription d'un nouvel utilisateur
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseConfig.apiKey}`
     // Body de la requête 
@@ -55,7 +54,14 @@ export class AuthenticationFirebaseService implements AuthenticationService {
         jwtRefreshToken: response.refreshToken,
         expiresIn: response.expiresIn,
         userId: response.localId,
-      }))
+      })),
+      // Interception d'éventuelles erreurs 'métier' envoyées par le backend
+      catchError(error => {
+        if(error.error.error.message === 'EMAIL_EXISTS') {
+          return of(new EmailAlreadyTakenError(email));
+        } 
+        throw error;
+      })
     );
   }
 
@@ -77,3 +83,4 @@ export class AuthenticationFirebaseService implements AuthenticationService {
     );
   }
 }
+

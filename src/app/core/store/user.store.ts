@@ -1,8 +1,6 @@
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
-import { computed, inject } from '@angular/core';
-import { User, Visitor } from '../entity/user.interface';
-import { AuthenticationService } from '../port/authentication.service';
-import { UserService } from '../port/user.service';
+import { computed } from '@angular/core';
+import { User } from '../entity/user.interface';
 
 
 // Contrat d'état de l'entité métier User (User peut être indéfini)
@@ -22,30 +20,11 @@ export const UserStore = signalStore(
     const isGoogleUser = computed(()=> !!store.user()?.email.endsWith('@google.com'));
     return {isGoogleUser}
   }),
-  // Ajout de méthodes utilisant AuthenticationService et UserService
-  withMethods(
-    (
-      store, 
-      authenticationService = inject(AuthenticationService),
-      userService = inject(UserService)
-    ) => ({
-      // Inscription d'un visiteur et enregistrement de l'utilisateur dans le store
-      register(visitor: Visitor): void {
-        authenticationService
-          .register(visitor.email, visitor.password)
-          .subscribe((response) => {
-            const user: User = {
-              id: response.userId,
-              name: visitor.name,
-              email: visitor.email,
-            };
-            userService.create(user, response.jwtToken).subscribe({
-              next: () => {
-                patchState(store, {user});
-              },
-            });
-          });
-      },
-    })
-  )
+  // Ajout d'une méthode register
+  withMethods((store) => ({
+    // Inscription et enregistrement de l'utilisateur dans le Global Store
+    register(user: User): void {
+      patchState(store, {user});
+    },
+  }))
 );

@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { User, Visitor } from 'src/app/core/entity/user.interface';
-import { AuthenticationService } from 'src/app/core/port/authentication.service';
+import { AuthenticationService, EmailAlreadyTakenError } from 'src/app/core/port/authentication.service';
 import { UserService } from 'src/app/core/port/user.service';
+import { UserStore } from 'src/app/core/store/user.store';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +14,21 @@ export class RegisterUserUseCaseService {
   readonly #authenticationService = inject(AuthenticationService);
   // On récupère le port UserService permettant de manager les données de l'utilisateur dans la base de données du backend
   readonly #userService = inject(UserService);
+  // On récupère le UserStore
+  readonly #userStore = inject(UserStore);
   
-  // On exécute la requête asynchrone d'inscription du visiteur et on retourne soit un utilisateur, soit une erreur
-  async execute(visitor: Visitor): Promise<User|Error> {
+  // On exécute la requête asynchrone d'inscription du visiteur - Retourne un utilisateur
+  async execute(visitor: Visitor): Promise<User> {
     // Etape 1 - Inscription d'un nouveau visiteur : la requête vers le backend retourne une réponse de type RegisterResponse
     const name = visitor.name;
     const email = visitor.email;
     const password = visitor.password;
     const authResponse = await firstValueFrom(this.#authenticationService.register(email, password));
+    
+    if(authResponse instanceof EmailAlreadyTakenError) {
+      // On lève une erreur
+      throw authResponse;
+    }
     
     // Etape 2 - On récupère les informations d'authentification de l'utilisateur envoyées par le Backend
     const jwtToken = authResponse.jwtToken;
@@ -34,7 +42,10 @@ export class RegisterUserUseCaseService {
     const user: User =  {id,name,email}
     await firstValueFrom(this.#userService.create(user, jwtToken));
 
-    // Etape 5 - On retourne l'utilisateur
+    // Etape 5 - On sauvegarde l'utilisateur dans le UserStore (Global Store)
+    this.#userStore.register(user);
+    
+    // Etape 6 - On retourne l'utilisateur
     return user;
   }
 }
