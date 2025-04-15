@@ -5,6 +5,7 @@ import { AuthenticationService } from 'src/app/core/port/authentication.service'
 import { UserService } from 'src/app/core/port/user.service';
 import { UserStore } from 'src/app/core/store/user.store';
 import { EmailAlreadyTakenError } from './email-already-taken.error';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,8 @@ export class RegisterUserUseCase {
   readonly #userService = inject(UserService);
   // On récupère le UserStore
   readonly #userStore = inject(UserStore);
+  // On récupère le Router
+  readonly #router = inject(Router)
   
   // On exécute la requête asynchrone d'inscription du visiteur - Retourne un utilisateur
   async execute(visitor: Visitor): Promise<void> {
@@ -42,5 +45,8 @@ export class RegisterUserUseCase {
 
     // Etape 5 - On sauvegarde l'utilisateur dans le UserStore (Global Store)
     this.#userStore.register(user);
+
+    // Etape 6 - On redirige l'utilisateur vers la page de dashboard
+    this.#router.navigate(['/app/dashboard']);
   }
 }
