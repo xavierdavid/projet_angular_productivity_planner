@@ -29,8 +29,7 @@ export class RegisterUserUseCase {
     }
     
     // Etape 2 - On récupère les informations d'authentification de l'utilisateur envoyées par le Backend
-    const jwtToken = registerResponse.jwtToken;
-    const id = registerResponse.userId;
+    const {userId: id, jwtToken} = registerResponse;
     
     // Etape 3 - On sauvegarde le token d'authentification et l'email de l'utilisateur dans le localStorage (session)
     localStorage.setItem('jwtToken', jwtToken); 
