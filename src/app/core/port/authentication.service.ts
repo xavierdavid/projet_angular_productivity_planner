@@ -12,7 +12,12 @@ export interface RegisterResponse {
 } 
 
 // Gestion de l'erreur 'Email déjà existant'
-export class EmailAlreadyTakenError extends Error {}
+export class EmailAlreadyTakenError extends Error {
+  constructor(email: string) {
+    super(`Email ${email} is already taken. Please try another email.`);
+    this.name = 'EmailAlreadyTakenError';
+  }
+}
 
 // Contrat de données de la réponse attendue suite à la connexion de l'utilisateur
 export interface LoginResponse {
