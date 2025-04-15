@@ -4,7 +4,7 @@ import { AuthenticationFirebaseService } from '../adapter/authentication-firebas
 
 
 // Contrat de données de la réponse attendue suite à l'inscription d'un nouvel utilisateur
-export interface RegisterResponse {
+export interface RegisterPayload {
   jwtToken: string;
   jwtRefreshToken: string;
   expiresIn: string;
@@ -36,7 +36,7 @@ export interface LoginResponse {
 export abstract class AuthenticationService {
 
   // Requête d'inscription d'un nouvel utilisateur - Retourne une RegisterResponse ou une EmailAlreadyTakenError
-  abstract register(email:string, password:string): Observable<RegisterResponse|EmailAlreadyTakenError>;
+  abstract register(email:string, password:string): Observable<RegisterPayload|EmailAlreadyTakenError>;
 
   // Requête d'authentification d'un utilisateur inscrit
   abstract login(email: string, password: string): Observable<LoginResponse>

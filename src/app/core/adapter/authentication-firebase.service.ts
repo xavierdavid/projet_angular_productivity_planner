@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
-import { AuthenticationService, EmailAlreadyTakenError, LoginResponse, RegisterResponse } from '../port/authentication.service';
+import { AuthenticationService, EmailAlreadyTakenError, LoginResponse, RegisterPayload } from '../port/authentication.service';
 
 
 /**
@@ -42,7 +42,7 @@ export class AuthenticationFirebaseService implements AuthenticationService {
   readonly #http = inject(HttpClient);
 
   // Requête d'inscription d'un nouvel utilisateur sur Firebase
-  register(email:string, password:string): Observable<RegisterResponse|EmailAlreadyTakenError> {
+  register(email:string, password:string): Observable<RegisterPayload|EmailAlreadyTakenError> {
     // URL de requête d'inscription d'un nouvel utilisateur
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseConfig.apiKey}`
     // Body de la requête 
