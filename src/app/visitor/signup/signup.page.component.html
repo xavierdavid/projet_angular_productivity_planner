@@ -123,7 +123,7 @@
           </div>
         }
         <!-- SUBMIT -->
-        <button data-testid="submit-button" type="submit" class="btn btn-primary w-100 mt-3" [disabled]="form.invalid || !isPasswordMatch()">Submit</button>
+        <button data-testid="submit-button" type="submit" class="btn btn-primary w-100 mt-3" [disabled]="form.invalid || !isPasswordMatch() || isEmailAlreadyTaken()">Submit</button>
       </form>
     </div>
   </div>
