@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SignupPageComponent } from './signup.page.component';
-import { UserStore } from '../../core/store/user.store';
-import { AuthenticationService } from '../../core/port/authentication.service';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { SignupPageComponent } from './signup.page.component';
+import { RegisterUserUseCase } from './domain/register-user.use-case';
 
 describe('SignupPageComponent', () => {
   let component: SignupPageComponent;
@@ -18,8 +17,7 @@ describe('SignupPageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [SignupPageComponent],
       providers: [
-        { provide: UserStore, useValue: {}},
-        { provide: AuthenticationService, useValue: {} }
+        { provide: RegisterUserUseCase, useValue: {} }
       ]
     })
     .compileComponents();

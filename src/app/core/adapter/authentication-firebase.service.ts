@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { AuthenticationService, LoginResponse, RegisterResponse } from '../port/authentication.service';
-import { EmailAlreadyTakenError } from 'src/app/visitor/signup/domain/email-already-taken.error';
+import { EmailAlreadyTakenError } from '@app/visitor/signup/domain/email-already-taken.error';
 
 
 /**
