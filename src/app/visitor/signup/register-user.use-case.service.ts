@@ -20,19 +20,17 @@ export class RegisterUserUseCaseService {
   // On exécute la requête asynchrone d'inscription du visiteur - Retourne un utilisateur
   async execute(visitor: Visitor): Promise<User> {
     // Etape 1 - Inscription d'un nouveau visiteur : la requête vers le backend retourne une réponse de type RegisterResponse
-    const name = visitor.name;
-    const email = visitor.email;
-    const password = visitor.password;
-    const authResponse = await firstValueFrom(this.#authenticationService.register(email, password));
+    const {name, email, password} = visitor;
+    const registerResponse = await firstValueFrom(this.#authenticationService.register(email, password));
     
-    if(authResponse instanceof EmailAlreadyTakenError) {
+    if(registerResponse instanceof EmailAlreadyTakenError) {
       // On lève une erreur
-      throw authResponse;
+      throw registerResponse;
     }
     
     // Etape 2 - On récupère les informations d'authentification de l'utilisateur envoyées par le Backend
-    const jwtToken = authResponse.jwtToken;
-    const id = authResponse.userId;
+    const jwtToken = registerResponse.jwtToken;
+    const id = registerResponse.userId;
     
     // Etape 3 - On sauvegarde le token d'authentification et l'email de l'utilisateur dans le localStorage (session)
     localStorage.setItem('jwtToken', jwtToken); 
