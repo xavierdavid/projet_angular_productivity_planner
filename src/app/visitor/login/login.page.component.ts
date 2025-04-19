@@ -13,6 +13,8 @@ export class LoginPageComponent {
   readonly #loginUserUseCase = inject(LoginUserUseCase)
   readonly email = signal('');
   readonly password = signal('');
+  readonly userEmailNotFoundError = signal<UserEmailNotFoundError|null>(null);
+  readonly invalidPasswordError = signal<InvalidPasswordError|null>(null);
 
   // Gestion de la soumission du formulaire de connexion
   onSubmit() {
