@@ -5,6 +5,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { User } from '../entity/user.interface';
 
+// Typage de la réponse de l'API de Firebase
+interface UserFirebasePayload {
+  fields: {
+    name: { stringValue: string };
+    email: { stringValue: string };
+  };
+}
+
 @Injectable()
 export class UserFirebaseService implements UserService {
   
@@ -23,7 +31,7 @@ export class UserFirebaseService implements UserService {
   // URL d'accès aux collections d'utilisateurs authentifiés sur Firebase
   readonly #USER_COLLECTION_URL = `${this.#FIRESTORE_URL}/${this.#USER_COLLECTION_ID}?key=${this.#FIREBASE_API_KEY}&documentId=`;
   
-  // Méthode de création d'un utilisateur sur Firebase
+  // Méthode permettant de créer un nouvel utilisateur sur Firebase
   create(user: User, bearerToken: string): Observable<void>{
     const url = `${this.#USER_COLLECTION_URL}${user.id}`;
     // Body de la requête
@@ -41,5 +49,22 @@ export class UserFirebaseService implements UserService {
     const options = {headers};
     // Requête POST (on ignore les informations de retour)
     return this.#http.post(url, body, options).pipe(map(()=> undefined));
+  }
+
+  // Méthode permettant de récupérer un utilisateur sur Firebase
+  fetch(userId: string, bearerToken: string): Observable<User> {
+    const url = `${this.#FIRESTORE_URL}/${this.#USER_COLLECTION_ID}/${userId}?key=${this.#FIREBASE_API_KEY}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${bearerToken}`,
+    });
+    const options = { headers };
+    // Requête GET 
+    return this.#http.get<UserFirebasePayload>(url, options).pipe(
+      map((response) => ({
+        id: userId,
+        name: response.fields.name.stringValue,
+        email: response.fields.email.stringValue,
+      }))   
+    );
   }
 }

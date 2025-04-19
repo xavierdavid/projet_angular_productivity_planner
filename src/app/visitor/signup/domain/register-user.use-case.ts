@@ -35,7 +35,7 @@ export class RegisterUserUseCase {
     // Etape 2 - On récupère les informations d'authentification de l'utilisateur envoyées par le Backend
     const {userId: id, jwtToken} = registerResponse;
     
-    // Etape 3 - On sauvegarde le token d'authentification et l'email de l'utilisateur dans le localStorage (session)
+    // Etape 3 - On sauvegarde le token d'authentification et l'email de l'utilisateur dans le localStorage (webapp storage)
     localStorage.setItem('jwtToken', jwtToken); 
     localStorage.setItem('email', email); 
     
@@ -43,8 +43,8 @@ export class RegisterUserUseCase {
     const user: User =  {id,name,email}
     await firstValueFrom(this.#userService.create(user, jwtToken));
 
-    // Etape 5 - On sauvegarde l'utilisateur dans le UserStore (Global Store)
-    this.#userStore.register(user);
+    // Etape 5 - On ajoute l'utilisateur dans le UserStore (Global Store)
+    this.#userStore.load(user);
 
     // Etape 6 - On redirige l'utilisateur vers la page de dashboard
     this.#router.navigate(['/app/dashboard']);

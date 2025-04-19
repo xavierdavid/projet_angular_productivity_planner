@@ -22,8 +22,8 @@ export const UserStore = signalStore(
   }),
   // Ajout d'une méthode register
   withMethods((store) => ({
-    // Inscription et enregistrement de l'utilisateur dans le Global Store
-    register(user: User): void {
+    // Ajout de l'utilisateur dans le Global Store
+    load(user: User): void {
       patchState(store, {user});
     },
   }))

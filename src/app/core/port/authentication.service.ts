@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthenticationFirebaseService } from '../adapter/authentication-firebase.service';
 import { EmailAlreadyTakenError } from '@app/visitor/signup/domain/email-already-taken.error';
-
+import { InvalidCredentialError } from '@app/visitor/login/domain/invalid-credential.error';
 
 // Contrat de données de la réponse attendue suite à l'inscription d'un nouvel utilisateur
 export type RegisterResponse = RegisterPayload | EmailAlreadyTakenError;
@@ -14,7 +14,7 @@ interface RegisterPayload {
 } 
 
 // Contrat de données de la réponse attendue suite à la connexion de l'utilisateur
-export type LoginResponse = LoginPayload;
+export type LoginResponse = LoginPayload | InvalidCredentialError;
 interface LoginPayload {
   jwtToken: string;
   jwtRefreshToken: string;
