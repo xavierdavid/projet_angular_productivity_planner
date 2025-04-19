@@ -11,8 +11,8 @@ import { User } from '../entity/user.interface';
 export abstract class UserService {
   // Création d'un utilisateur
   abstract create(user: User, bearerToken: string): Observable<void>;
-  // Récupération d'un utilisateur à l'aide de son identifiant
-  abstract fetch(userId: string): Observable<User>;
+  // Récupération d'un utilisateur à l'aide de son identifiant et de son token
+  abstract fetch(userId: string, bearerToken: string): Observable<User>;
 
   // Suppression d'un utilisateur
     // delete(user: User): Observable<void> {}

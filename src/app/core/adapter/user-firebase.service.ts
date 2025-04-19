@@ -52,10 +52,14 @@ export class UserFirebaseService implements UserService {
   }
 
   // Méthode permettant de récupérer un utilisateur sur Firebase
-  fetch(userId: string): Observable<User> {
+  fetch(userId: string, bearerToken: string): Observable<User> {
     const url = `${this.#FIRESTORE_URL}/${this.#USER_COLLECTION_ID}/${userId}?key=${this.#FIREBASE_API_KEY}`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${bearerToken}`,
+    });
+    const options = { headers };
     // Requête GET 
-    return this.#http.get<UserFirebasePayload>(url).pipe(
+    return this.#http.get<UserFirebasePayload>(url, options).pipe(
       map((response) => ({
         id: userId,
         name: response.fields.name.stringValue,

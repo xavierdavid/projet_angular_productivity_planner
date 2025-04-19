@@ -32,7 +32,7 @@ export class LoginUserUseCase {
     localStorage.setItem('expiresIn', expiresIn);
 
     // 4. Add user in app store
-    const user = await firstValueFrom(this.#userService.fetch(userId));
+    const user = await firstValueFrom(this.#userService.fetch(userId, jwtToken));
     this.#userStore.load(user);
 
     // 5. Redirect user to dashboard
