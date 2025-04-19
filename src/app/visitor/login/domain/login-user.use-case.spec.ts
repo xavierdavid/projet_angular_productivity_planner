@@ -1,12 +1,24 @@
 import { TestBed } from '@angular/core/testing';
 
 import { LoginUserUseCase } from './login-user.use-case';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '@app/core/port/authentication.service';
+import { UserService } from '@app/core/port/user.service';
+import { UserStore } from '@app/core/store/user.store';
 
 describe('LoginUserUseCase', () => {
   let service: LoginUserUseCase;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        LoginUserUseCase,
+        { provide: AuthenticationService, useValue: { register: jest.fn()}},
+        { provide: UserService, useValue: { create: jest.fn( )}},
+        { provide: UserStore, useValue: { register: jest.fn() }},
+        { provide: Router, useValue: { navigate: jest.fn() }},
+      ],
+    });
     service = TestBed.inject(LoginUserUseCase);
   });
 
