@@ -23,7 +23,7 @@ export class UserFirebaseService implements UserService {
   // URL d'accès aux collections d'utilisateurs authentifiés sur Firebase
   readonly #USER_COLLECTION_URL = `${this.#FIRESTORE_URL}/${this.#USER_COLLECTION_ID}?key=${this.#FIREBASE_API_KEY}&documentId=`;
   
-  // Méthode de création d'un utilisateur sur Firebase
+  // Méthode permettant de créer un nouvel utilisateur sur Firebase
   create(user: User, bearerToken: string): Observable<void>{
     const url = `${this.#USER_COLLECTION_URL}${user.id}`;
     // Body de la requête
@@ -41,5 +41,23 @@ export class UserFirebaseService implements UserService {
     const options = {headers};
     // Requête POST (on ignore les informations de retour)
     return this.#http.post(url, body, options).pipe(map(()=> undefined));
+  }
+
+  // Méthode permettant de récupérer un utilisateur sur Firebase
+  fetch(userId: string): Observable<User> {
+    const url = `${this.#FIRESTORE_URL}/${this.#USER_COLLECTION_ID}/${userId}?key=${this.#FIREBASE_API_KEY}`;
+    // Requête GET 
+    return this.#http.get<any>(url).pipe(
+      map((response) => {
+        console.log("Login firebase response");
+        console.log(response);
+        const fields = response.fields;
+        return {
+          id: userId,
+          name: fields.name.stringValue,
+          email: fields.email.stringValue,
+        } as User;
+      })
+    );
   }
 }

@@ -9,14 +9,14 @@ import { User } from '../entity/user.interface';
   useClass: UserFirebaseService,
 })
 export abstract class UserService {
-  
   // Création d'un utilisateur
   abstract create(user: User, bearerToken: string): Observable<void>;
+  // Récupération d'un utilisateur à l'aide de son identifiant
+  abstract fetch(userId: string): Observable<User>;
 
   // Suppression d'un utilisateur
-  //delete(user: User): Observable<void> {}
+    // delete(user: User): Observable<void> {}
   // Modification d'un utilisateur
-  //update(user: User): Observable<void> {}
-  // Récupération d'un utilisateur à l'aide de son identifiant
-  //fetch(id: string){}
+    // update(user: User): Observable<void> {}
+  
 }
