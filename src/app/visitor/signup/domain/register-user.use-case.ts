@@ -43,8 +43,8 @@ export class RegisterUserUseCase {
     const user: User =  {id,name,email}
     await firstValueFrom(this.#userService.create(user, jwtToken));
 
-    // Etape 5 - On sauvegarde l'utilisateur dans le UserStore (Global Store)
-    this.#userStore.register(user);
+    // Etape 5 - On ajoute l'utilisateur dans le UserStore (Global Store)
+    this.#userStore.load(user);
 
     // Etape 6 - On redirige l'utilisateur vers la page de dashboard
     this.#router.navigate(['/app/dashboard']);
