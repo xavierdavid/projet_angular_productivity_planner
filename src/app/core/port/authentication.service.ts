@@ -16,7 +16,7 @@ interface RegisterPayload {
 } 
 
 // Contrat de données de la réponse attendue suite à la connexion de l'utilisateur
-export type LoginResponse = LoginPayload | UserEmailNotFoundError | InvalidPasswordError; ;
+export type LoginResponse = LoginPayload | InvalidCredentialError;
 interface LoginPayload {
   jwtToken: string;
   jwtRefreshToken: string;

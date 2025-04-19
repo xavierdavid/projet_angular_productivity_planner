@@ -80,7 +80,14 @@ export class AuthenticationFirebaseService implements AuthenticationService {
         expiresIn: response.expiresIn,
         userId: response.localId,
         isRegistered: response.registered,
-      }))
+      })),
+      // Interception d'éventuelles erreurs 'métier' envoyées par le backend
+      catchError(error => {
+        if(error.error.error.message === 'INVALID_LOGIN_CREDENTIALS') {
+          return of(new InvalidCredentialError());
+        }
+        return throwError(() => error);
+      })
     );
   }
 }
