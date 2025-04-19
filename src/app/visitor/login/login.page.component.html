@@ -2,7 +2,7 @@
   <div class="row justify-content-center">
     <div class="col-4">
       <!-- Directive ngForm permettant de créer un formulaire Angular -->
-      <form #form="ngForm">
+      <form (ngSubmit)="onSubmit()" #form="ngForm">
         <!-- EMAIL -->
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
@@ -53,7 +53,7 @@
           data-testid="submit-button" 
           type="submit" 
           class="btn btn-primary w-100 mt-3" 
-          disabled
+          [disabled]="form.invalid"
           >
           Submit
         </button>
