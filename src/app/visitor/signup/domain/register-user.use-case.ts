@@ -33,11 +33,12 @@ export class RegisterUserUseCase {
     }
     
     // Etape 2 - On récupère les informations d'authentification de l'utilisateur envoyées par le Backend
-    const {userId: id, jwtToken} = registerResponse;
+    const {userId: id, jwtToken, jwtRefreshToken, expiresIn} = registerResponse;
     
     // Etape 3 - On sauvegarde le token d'authentification et l'email de l'utilisateur dans le localStorage (webapp storage)
     localStorage.setItem('jwtToken', jwtToken); 
-    localStorage.setItem('email', email); 
+    localStorage.setItem('jwtRefreshToken', jwtRefreshToken);
+    localStorage.setItem('expiresIn', expiresIn);
     
     // Etape 4 - On crée un nouvel objet User et on l'enregistre dans la base de données du backend 
     const user: User =  {id,name,email}
