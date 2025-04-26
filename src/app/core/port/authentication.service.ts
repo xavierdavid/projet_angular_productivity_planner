@@ -35,4 +35,11 @@ export abstract class AuthenticationService {
 
   // Requête d'authentification d'un utilisateur inscrit
   abstract login(email: string, password: string): Observable<LoginResponse>
+
+  /**
+   * Requête de récupération d'un nouveau jeton JWT Token à l'aide du refreshToken fourni
+   * @param refreshToken - Permet de récupérer un nouveau JWT Token
+   * @returns An Observable qui émet un nouveau JWT Token de type string
+   */
+  abstract refreshToken(refreshToken: string): Observable<{ jwtToken:string, userId:string}>;
 }
