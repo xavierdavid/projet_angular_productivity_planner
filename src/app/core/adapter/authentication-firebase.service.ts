@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '@env/environment';
 import { catchError, map, Observable, of, throwError } from 'rxjs';
 import { AuthenticationService, LoginResponse, RegisterResponse } from '../port/authentication.service';
@@ -12,7 +12,7 @@ import { InvalidCredentialError } from '@app/visitor/login/domain/invalid-creden
  * 
  * @see https://firebase.google.com/docs/reference/rest/auth?hl=fr#section-create-email-password
  */
-interface FirebaseResponseSignin {
+interface FirebaseResponseSigninPayload {
   idToken: string;
   email: string;
   refreshToken: string;
@@ -26,7 +26,7 @@ interface FirebaseResponseSignin {
  * 
  * @see https://firebase.google.com/docs/reference/rest/auth?hl=fr#section-create-email-password
  */
-interface FirebaseResponseSignup {
+interface FirebaseResponseSignupPayload {
   displayName: string;
   email: string;
   expiresIn: string;
@@ -35,6 +35,17 @@ interface FirebaseResponseSignup {
   refreshToken: string;
   registered: boolean;
 } 
+/**
+ * Contrat de données du refreshToken fournipar Firebase
+ */
+export interface FirebaseRefreshTokenPayload {
+  expires_in: string;
+  token_type: string; // always "Bearer"
+  refresh_token: string;
+  id_token: string;
+  user_id: string;
+  project_id: string;
+}
 
 // Adaptateur spécifique pour établir la liaison de Firebase avec le port d'entrée AuthenticationService
 @Injectable()
@@ -50,7 +61,7 @@ export class AuthenticationFirebaseService implements AuthenticationService {
     // Body de la requête 
     const body = {email,password,"returnSecureToken":true};
     // Requête POST
-    return this.#http.post<FirebaseResponseSignup>(url,body).pipe(
+    return this.#http.post<FirebaseResponseSignupPayload>(url,body).pipe(
       map((response) => ({
         jwtToken: response.idToken,
         jwtRefreshToken: response.refreshToken,
@@ -74,7 +85,7 @@ export class AuthenticationFirebaseService implements AuthenticationService {
     // Body de la requête
     const body = {email, password, returnSecureToken: true};
     // Requête POST
-    return this.#http.post<FirebaseResponseSignin>(url, body).pipe(
+    return this.#http.post<FirebaseResponseSigninPayload>(url, body).pipe(
       map(response => ({
         jwtToken: response.idToken,
         jwtRefreshToken: response.refreshToken,
@@ -89,6 +100,20 @@ export class AuthenticationFirebaseService implements AuthenticationService {
         }
         return throwError(() => error);
       })
+    );
+  }
+  // Requête permettant d'obtenir un nouvel JWT Token actualisé à partir du refreshToken de l'utilisateur 
+  refreshToken(refreshToken: string): Observable<{ jwtToken: string, userId: string }> {
+    const url = `https://securetoken.googleapis.com/v1/token?key=${environment.firebaseConfig.apiKey}`;
+    const body = new HttpParams()
+      .set('grant_type', 'refresh_token')
+      .set('refresh_token', refreshToken)
+      .toString();
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+
+    return this.#http.post<FirebaseRefreshTokenPayload>(url, body, { headers }).pipe(
+      map(response => ({ jwtToken: response.id_token, userId: response.user_id })),
     );
   }
 }

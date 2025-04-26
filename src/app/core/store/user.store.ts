@@ -9,6 +9,7 @@ interface UserState {
 }
 
 // Global Store - Gestion réactive de l'état des données de l'utilisateur utilisant le signalStore d'Angular
+export type UserStore = InstanceType<typeof UserStore>
 export const UserStore = signalStore(
   { providedIn: 'root'},
   // Etat initial de l'entité métier User
