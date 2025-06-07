@@ -40,8 +40,6 @@ export function initializeAutoConnectFactory(
         next: (user) => {
           // On charge les informations de l'utilisateur dans le UserStore
           userStore.load(user);
-          // On redirige l'utilisateur vers le Dashboard      
-          router.navigate(['/app/dashboard']);
           observer.complete();
         },
         error: () => {
