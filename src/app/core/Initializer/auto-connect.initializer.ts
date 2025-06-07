@@ -1,6 +1,5 @@
 import { concatMap, Observable } from 'rxjs';
 import { tap } from 'rxjs';
-import { Router } from '@angular/router';
 import { AuthenticationService } from '@app/core/port/authentication.service';
 import { UserService } from '@app/core/port/user.service';
 import { UserStore } from '@app/core/store/user.store';
@@ -17,7 +16,6 @@ export function initializeAutoConnectFactory(
   authenticationService: AuthenticationService,
   userService: UserService,
   userStore: UserStore,
-  router: Router
 ): () => Observable<void> {
   return () => new Observable<void>((observer) => {
     // Récupération d'un éventuel refreshToken de l'utilisateur
@@ -40,8 +38,6 @@ export function initializeAutoConnectFactory(
         next: (user) => {
           // On charge les informations de l'utilisateur dans le UserStore
           userStore.load(user);
-          // On redirige l'utilisateur vers le Dashboard      
-          router.navigate(['/app/dashboard']);
           observer.complete();
         },
         error: () => {

@@ -1,6 +1,5 @@
 import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter, Router } from '@angular/router';
-
+import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { initializeAutoConnectFactory } from './core/Initializer/auto-connect.initializer';
@@ -18,7 +17,6 @@ export const appConfig: ApplicationConfig = {
         inject(AuthenticationService),
         inject(UserService),
         inject(UserStore),
-        inject(Router)
       )();
     }),
   ],
