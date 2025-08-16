@@ -1,4 +1,5 @@
-import { signalStore, withState } from '@ngrx/signals';
+import { computed } from '@angular/core';
+import { signalStore, withComputed, withState } from '@ngrx/signals';
 
 // Contrat de structure de données pour l'objet 'Pomodoro'
 interface Pomodoro {
@@ -52,5 +53,12 @@ const initialState: WorkdayState = {
 
 // Démarrage du Store
 export const WorkdayStore = signalStore(
-  withState(initialState)
+  withState<WorkdayState>(initialState),
+    withComputed((store) => {
+    const getMostImportantTask = computed(
+      () => store.taskList()[0]
+    );
+
+    return { getMostImportantTask };
+  }),
 );
