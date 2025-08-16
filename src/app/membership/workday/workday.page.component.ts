@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { WorkdayStore } from './workday.page.store';
-
 @Component({
   imports: [],
   templateUrl: './workday.page.component.html',
@@ -8,6 +7,7 @@ import { WorkdayStore } from './workday.page.store';
   // Workday LocalStore
   providers: [WorkdayStore]
 })
-export class WorkdayPageComponent {
 
+export class WorkdayPageComponent {
+  readonly store = inject(WorkdayStore);
 }
