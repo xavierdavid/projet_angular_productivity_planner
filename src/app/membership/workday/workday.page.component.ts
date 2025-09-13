@@ -9,5 +9,6 @@ import { WorkdayStore } from './workday.page.store';
 })
 
 export class WorkdayPageComponent {
+  //Injection du store Workday dans le composant en lecture seule et à utiliser dans le template
   readonly store = inject(WorkdayStore);
 }

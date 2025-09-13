@@ -22,9 +22,8 @@ interface Task {
   pomodoroList: PomodoroList;
 }
 
-// Typage de la variable 'liste de tâches' (tableau contenant 0 à 6 tâches au maximum)
+// Typage de la variable 'liste de tâches' (tableau contenant 1 à 6 tâches au maximum)
 type TaskList =
-  | []
   | [Task]
   | [Task, Task]
   | [Task, Task, Task]
@@ -55,10 +54,10 @@ const initialState: WorkdayState = {
 export const WorkdayStore = signalStore(
   withState<WorkdayState>(initialState),
     withComputed((store) => {
-    const getMostImportantTask = computed(
+    const mostImportantTask = computed(
       () => store.taskList()[0]
     );
 
-    return { getMostImportantTask };
+    return { mostImportantTask };
   }),
 );
