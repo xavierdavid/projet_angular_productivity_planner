@@ -1,11 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { WorkdayStore } from './workday.page.store';
+
 @Component({
-  imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './workday.page.component.html',
   styleUrl: './workday.page.component.scss',
   // Workday LocalStore
-  providers: [WorkdayStore]
+  providers: [WorkdayStore],
+  imports: [],
+  
 })
 
 export class WorkdayPageComponent {
