@@ -35,8 +35,7 @@
           <option value="Hit the target">🎯</option>
         </select>
         <!-- Sélection du titre de la tâche - Ecoute de l'évènement 'input'-->
-        <input class="flex-grow-1 fs-5" [value]="task.title" (imput)="store.updateTaskTitle($index, $event)"/>
-        
+        <input class="form-control flex-grow-1 fs-5 border-0" [value]="task.title" (input)="store.updateTaskTitle($index, $event)" />
         <!-- Timer controls -->
         <div class="d-flex align-items-center ms-3">
           <!-- Sélection du nombre de pomodoro affecté à la tâche - Ecoute de l'évènement 'change'-->
@@ -55,6 +54,12 @@
           <span class="mx-3 fs-5">0</span>
           <span>🏁</span>
         </div>
+
+        <!-- Ajout d'une icône 'X' pour supprimer une tâche -->
+        <button class="btn btn-link text-muted ms-3">
+          <i class="bi bi-x fs-4"></i>
+        </button>
+
       </div>
     </div>
   }
