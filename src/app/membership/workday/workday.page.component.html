@@ -27,7 +27,8 @@
       <h6 class="mb-3 text-muted">Tâches restantes</h6>
     }
 
-    <div class="card p-3 mb-3">
+    <!-- Tâche  -->
+    <div class="card p-3 mb-3" [attr.data-testid]="`task-${$index}`">
       <div class="d-flex align-items-center">
         <!-- Sélection du type de tâche - Ecoute de l'évènement 'change'-->
         <select class="form-select w-auto me-3" (change)="store.updateTaskType($index, $event)">
@@ -35,7 +36,8 @@
           <option value="Hit the target">🎯</option>
         </select>
         <!-- Sélection du titre de la tâche - Ecoute de l'évènement 'input'-->
-        <input class="form-control flex-grow-1 fs-5 border-0" [value]="task.title" (input)="store.updateTaskTitle($index, $event)" />
+        <input class="form-control flex-grow-1 fs-5 border-0" [value]="task.title" (input)="store.updateTaskTitle($index, $event)" [attr.data-testid]="`task-input-${$index}`" />
+        
         <!-- Timer controls -->
         <div class="d-flex align-items-center ms-3">
           <!-- Sélection du nombre de pomodoro affecté à la tâche - Ecoute de l'évènement 'change'-->
@@ -56,18 +58,17 @@
         </div>
 
         <!-- Ajout d'une icône 'X' pour supprimer une tâche -->
-        <button class="btn btn-link text-muted ms-3" (click)="store.removeTask($index)">
+        <button class="btn btn-link text-muted ms-3" [attr.data-testid]="`task-remove-${$index}`" (click)="store.removeTask($index)">
           <i class="bi bi-x fs-4"></i>
         </button>
-
       </div>
-    </div>
+    </div>  
   }
 
   <!-- Ajouter une tâche -->
   <div class="text-center">
     @if(store.isButtonDisplayed()) {
-    <button data-test="add-task-button" class="btn btn-link text-muted" (click)="store.onAddTask()">Ajouter une tâche</button>
+    <button data-testid="add-task-button" class="btn btn-link text-muted" (click)="store.onAddTask()">Ajouter une tâche</button>
     }
   </div>
 </div>
