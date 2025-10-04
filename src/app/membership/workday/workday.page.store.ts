@@ -77,7 +77,7 @@ export const WorkdayStore = signalStore(
     // Gestion de la suppression d'une tâche ajoutée - On conserve les tâches n'ayant pas l'index courant
     removeTask($index: number) {
       // Patch de la nouvelle tâche dans le state (modification du state de manière immutable)
-      patchState(store, (state) => ({ taskList: state.taskList.filter((_, i) => i !== $index) }))
+      patchState(store, (state) => ({ taskList: state.taskList.toSpliced($index, 1) }))
     },
     // Gestion de la modification de la propriété 'type' de la tâche sélectionnée (à partir de son index - Ecoute d'évènement)
     updateTaskType($index: number, event: Event) {
