@@ -16,6 +16,8 @@ describe('WorkdayPageComponent', () => {
     fixture.debugElement.query(By.css(`[data-testid="task-input-${id - 1}"]`));
   const getRemoveTaskButton = (id: number) =>
     fixture.debugElement.query(By.css(`[data-testid="task-remove-${id - 1}"]`));
+  const getInboxZeroPlaceholder = () =>
+    fixture.debugElement.query(By.css('[data-testid="inbox-zero-placeholder"]'));
   const setTaskTitle = (id: number, title: string) => {
     const input = getTaskInput(id).nativeElement as HTMLInputElement;
     input.value = title;
@@ -36,7 +38,7 @@ describe('WorkdayPageComponent', () => {
     expect(component).toBeTruthy();
   });
   
-  describe('when workday page load', () => {
+  describe('when empty workday page load', () => {
     it('should display one task', () => {
       expect(getTask(1)).toBeTruthy();
       expect(getTask(2)).toBeNull();
@@ -44,6 +46,9 @@ describe('WorkdayPageComponent', () => {
     it('should display "Add task" button', () => {
       const button = getAddTaskButton();
       expect(button).toBeTruthy();
+    });
+    it('should hide inbox zero placeholder', () => {
+      expect(getInboxZeroPlaceholder()).toBeNull();
     });
   });
   
@@ -82,6 +87,17 @@ describe('WorkdayPageComponent', () => {
     it('sould hide "Add task" button', () => {
       const button = getAddTaskButton();
       expect(button).toBeNull();
+    });
+  });
+
+  describe('when no task is planned', () => {
+    beforeEach(() => {
+      getRemoveTaskButton(1).nativeElement.click();
+      fixture.detectChanges();
+    });
+
+    it('should display inbox zero placeholder', () => {
+      expect(getInboxZeroPlaceholder()).toBeTruthy();
     });
   });
 });

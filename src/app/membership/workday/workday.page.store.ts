@@ -60,12 +60,13 @@ export const WorkdayStore = signalStore(
     date: '2019-02-28',
     taskList: [getEmptyTask()],
   }),
-  //Gestion de l'état dérivé si on atteint 6 tâches
+  //Gestion de l'état dérivé si on atteint 6 tâches ou si aucune tâche n'est plannifiée
   withComputed((state) => {
     const taskCount = computed(() => state.taskList().length);
     const isButtonDisplayed = computed(() => taskCount() < WORKDAY_TASK_LIMIT);
+    const hasNoTaskPlanned = computed(() => taskCount() === 0);
 
-    return { taskCount, isButtonDisplayed };
+    return { taskCount, isButtonDisplayed, hasNoTaskPlanned };
   }), 
   // Gestion des interactions de l'utilisateur à partir du template
   withMethods((store) => ({
