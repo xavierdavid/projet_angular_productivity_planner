@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { WorkdayStore } from './workday.page.store';
+import { TaskFieldDumbComponent } from "./task-field/task-field.dumb.component";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -7,8 +8,7 @@ import { WorkdayStore } from './workday.page.store';
   styleUrl: './workday.page.component.scss',
   // Workday LocalStore
   providers: [WorkdayStore],
-  imports: [],
-  
+  imports: [TaskFieldDumbComponent],
 })
 
 export class WorkdayPageComponent {

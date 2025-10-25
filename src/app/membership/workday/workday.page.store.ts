@@ -13,13 +13,13 @@ interface Pomodoro {
 type PomodoroList = Pomodoro[];
 
 // Typage de la variable 'TaskType'
-type TaskType = 'Hit the target' | 'Get things done';
+export type TaskType = 'Hit the target' | 'Get things done';
 
 // Typage de la variable 'PomodoroCount'
-type PomodoroCount = 1 | 2 | 3 | 4 | 5;
+export type PomodoroCount = 1 | 2 | 3 | 4 | 5;
   
 // Contrat de structure de données pour l'objet 'Task'
-interface Task {
+export interface Task {
   type: TaskType;
   title: string;
   pomodoroCount: PomodoroCount;
@@ -65,13 +65,14 @@ export const WorkdayStore = signalStore(
     const taskCount = computed(() => state.taskList().length);
     const isButtonDisplayed = computed(() => taskCount() < WORKDAY_TASK_LIMIT);
     const hasNoTaskPlanned = computed(() => taskCount() === 0);
+    const hasTaskPlanned = computed(() => taskCount() > 0);
 
-    return { taskCount, isButtonDisplayed, hasNoTaskPlanned };
+    return { taskCount, isButtonDisplayed, hasNoTaskPlanned , hasTaskPlanned};
   }), 
   // Gestion des interactions de l'utilisateur à partir du template
   withMethods((store) => ({
     // Gestion de l'ajout d'une nouvelle tâche - Réponse à l'évènement clic
-    onAddTask() {
+    addTask() {
       // Patch de la nouvelle tâche dans le state (modification du state de manière immutable)
       patchState(store, (state) => ({ taskList: [...state.taskList, getEmptyTask()] }))
     },
@@ -80,42 +81,16 @@ export const WorkdayStore = signalStore(
       // Patch de la nouvelle tâche dans le state (modification du state de manière immutable)
       patchState(store, (state) => ({ taskList: state.taskList.toSpliced($index, 1) }))
     },
-    // Gestion de la modification de la propriété 'type' de la tâche sélectionnée (à partir de son index - Ecoute d'évènement)
-    updateTaskType($index: number, event: Event) {
-      // Ecoute de l'évènement à partir de la balise HTML 'select' et récupération de la valeur de l'index de la tâche sélectionnée
-      const type = (event.target as HTMLSelectElement).value as TaskType;
-      // Patch de la nouvelle tâche modifiée dans le state (modification du state de manière immutable)
-      patchState(store, (state) => {
-        // Tâche modifiée (à partir de la valeur de son index)
-        const task = { ...state.taskList[$index], type };
-        // Liste de tâches intégrant la tâche modifiée
-        const taskList = state.taskList.toSpliced($index, 1, task);
-        // On retourne le nouvel état de la liste de tâches
-        return { taskList };
-      });
-    },
-    // Gestion de la modification de la propriété 'title' de la tâche
-    updateTaskTitle($index: number, event: Event) {
-      const title = (event.target as HTMLInputElement).value as TaskType;
-      patchState(store, (state) => {
-        const task = { ...state.taskList[$index], title };
-        const taskList = state.taskList.toSpliced($index, 1, task);
-        return { taskList };
-      });
-    },
-    // Gestion de la modification de la propriété 'pomodoroCount' de la tâche
-    updateTaskPomodoroCount($index: number, event: Event) {
-      const pomodoroCount = Number((event.target as HTMLSelectElement).value) as PomodoroCount;
-      patchState(store, (state) => {
-        const task = { ...state.taskList[$index], pomodoroCount };
-        const taskList = state.taskList.toSpliced($index, 1, task);
-        return { taskList };
-      });
-    },
-    // Gestion de la modification de la propriété 'date' de la tâche
+    // Gestion de la mise à jour de la date
     updateDate(event: Event) {
       const date = (event.target as HTMLInputElement).value;
       patchState(store, () => ({ date }));
     },
+    // Gestion de la mise à jour de la tâche
+    updateTask(index: number, updatedTask: Task) {
+      patchState(store, (state) => {const taskList: TaskList = state.taskList.toSpliced(index, 1, updatedTask);
+        return { taskList };
+      });
+     },
   }))
 );
