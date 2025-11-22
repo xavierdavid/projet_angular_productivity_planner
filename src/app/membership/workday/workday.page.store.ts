@@ -33,6 +33,8 @@ type TaskList = Task[]
 interface WorkdayState {
   date: string;
   taskList: TaskList;
+  progress: number;
+  mode: 'edit' | 'execution';
 };
 
 // Description d'une constante pour une nouvelle tâche
@@ -59,6 +61,8 @@ export const WorkdayStore = signalStore(
     // Etat initial - Valeurs par défaut de l'Etat initial au démarrage
     date: '2019-02-28',
     taskList: [getEmptyTask()],
+    progress: 0,
+    mode: 'edit',
   }),
   //Gestion de l'état dérivé si on atteint 6 tâches ou si aucune tâche n'est plannifiée
   withComputed((state) => {
@@ -66,11 +70,17 @@ export const WorkdayStore = signalStore(
     const isButtonDisplayed = computed(() => taskCount() < WORKDAY_TASK_LIMIT);
     const hasNoTaskPlanned = computed(() => taskCount() === 0);
     const hasTaskPlanned = computed(() => taskCount() > 0);
+    const isEditMode = computed(() => state.mode() === 'edit');
+    const isExecutionMode = computed(() => state.mode() === 'execution');
 
-    return { taskCount, isButtonDisplayed, hasNoTaskPlanned , hasTaskPlanned};
+    return { taskCount, isButtonDisplayed, hasNoTaskPlanned , hasTaskPlanned, isEditMode, isExecutionMode};
   }), 
   // Gestion des interactions de l'utilisateur à partir du template
   withMethods((store) => ({
+    // Gestion du démarrage d'une tâche
+    startworkday() {
+      patchState(store, { mode: 'execution'});
+    },
     // Gestion de l'ajout d'une nouvelle tâche - Réponse à l'évènement clic
     addTask() {
       // Patch de la nouvelle tâche dans le state (modification du state de manière immutable)
