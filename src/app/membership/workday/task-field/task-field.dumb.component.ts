@@ -6,7 +6,6 @@ import { PomodoroCount, Task, TaskType } from '../workday.page.store';
   selector: 'app-task-field',
   imports: [],
   templateUrl: './task-field.dumb.component.html',
-  styleUrl: './task-field.dumb.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'card',
@@ -22,7 +21,7 @@ export class TaskFieldDumbComponent {
   readonly taskUpdated = output<Task>();
   readonly taskRemoved = output<void>();
 
-    updateTaskType(type: string): void {
+  updateTaskType(type: string): void {
     const task: Task = { ...this.task(), type: type as TaskType };
     this.taskUpdated.emit(task);
   }

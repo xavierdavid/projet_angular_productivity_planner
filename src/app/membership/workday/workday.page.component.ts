@@ -5,7 +5,6 @@ import { TaskFieldDumbComponent } from "./task-field/task-field.dumb.component";
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './workday.page.component.html',
-  styleUrl: './workday.page.component.scss',
   // Workday LocalStore
   providers: [WorkdayStore],
   imports: [TaskFieldDumbComponent],
