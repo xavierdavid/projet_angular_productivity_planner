@@ -2,7 +2,7 @@ import { computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { patchState, signalStore, withComputed, withMethods, withProps, withState } from '@ngrx/signals';
 import { Subject, takeUntil, timer } from 'rxjs';
-import { MAXIMUM_POMODORO_DURATION, getActivePomodoroIndex, getActiveTask, Task, TaskList, getActiveTaskIndex, getTaskEmojiStatus, isTaskCompleted } from './task.model';
+import { MAXIMUM_POMODORO_DURATION, getActivePomodoroIndex, getActiveTask,PomodoroList, Task, TaskList, getActiveTaskIndex, getTaskEmojiStatus, isTaskCompleted } from './task.model';
 
 // Contrat de structure de données pour l'objet 'WorkdayState'
 interface WorkdayState {
@@ -88,16 +88,28 @@ export const WorkdayStore = signalStore(
           }
 
           // Mise à jour et reconstruction de la tâche - Incrémentation du timer du pomodoro actif (à l'index du pomodoro actif) - Mise à jour le temps écoulé
-          task.pomodoroList[pomodoroIndex] = elapsedSeconds;
+          
+          // Create a new pomodoro list and a new task object (immutable update)
+            const newPomodoroList = [...task.pomodoroList] as PomodoroList;
+            newPomodoroList[pomodoroIndex] = elapsedSeconds;
+
+            const updatedTask: Task = {
+              ...task,
+              pomodoroList: newPomodoroList,
+              statusEmoji: getTaskEmojiStatus({
+                ...task,
+                pomodoroList: newPomodoroList,
+              }),
+            };
 
           // Mise à jour de l'emoji de statut de la tâche
-          task.statusEmoji = getTaskEmojiStatus(task);
+          
 
           // Récupération de la liste des tâches mise à jour à partir du store
           const taskList: TaskList = store
           .taskList()
           // On remplace dans la taskList la tâche courante par la tâche mise à jour 
-          .toSpliced(taskIndex, 1, task);
+          .toSpliced(taskIndex, 1, updatedTask);
        
           // Patch de la liste des tâches mise à jour dans le store
           return { taskList };

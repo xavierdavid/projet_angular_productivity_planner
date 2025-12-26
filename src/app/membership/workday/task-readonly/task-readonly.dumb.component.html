@@ -1,5 +1,5 @@
-<!-- Affichage de la tâche et de son formulaire en mode readonly lorsque la tâche adébuté-->
-
+<!DOCTYPE html>
+<!-- Affichage de la tâche et de son formulaire en mode readonly lorsque la tâche a débuté-->
 <div class="d-flex align-items-center">
     <!-- Affichage de l'emoji en fonction du type de la tâche -->
     @if(task().type === 'Hit the target') {
@@ -15,11 +15,9 @@
     <!-- Affichage du nombre de pomodoro sélectionné et de l'emoji 'in progress'-->
     <div class="d-flex align-items-center ms-3"> 
         <p class="w-auto me-3"> {{ task().pomodoroCount }}</p>
-        <button class="btn btn-sm">⏸</button>
-        <button class="btn btn-sm">⏸</button>
-        <button class="btn btn-sm">⏸</button>
-        <button class="btn btn-sm">⏸</button>
-        <button class="btn btn-sm">⏸</button>
+        @for(emoji of pomodoroListEmojiStatus(); track $index) {
+        <button class="btn btn-sm">{{ emoji }}</button>
+        }
         <span class="mx-3 fs-5">0</span>
         <span>{{ task().statusEmoji }}</span>
     </div>

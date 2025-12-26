@@ -13,7 +13,7 @@
         <div class="d-flex flex-column align-items mt-2">
           <div class="progress w-100" data-testid="workday-progress">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
-            [style.width.%]="store.pomodoroProgress()" aria-valuenow="{{store.pomodoroProgress()}}" aria-valuemin="0"
+            [style.width.%]="store.pomodoroProgress()" [attr.aria-valuenow]="store.pomodoroProgress()" aria-valuemin="0"
             aria-valuemax="100">
             {{store.pomodoroProgress()}}%
             </div>

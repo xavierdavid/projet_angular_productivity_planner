@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, model, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { createPomodoroList, PomodoroCount, Task, TaskType } from '../task.model';
 
 @Component({
@@ -13,7 +13,7 @@ import { createPomodoroList, PomodoroCount, Task, TaskType } from '../task.model
 })
 export class TaskFieldDumbComponent {
   // Propriétés d'entrée
-  readonly task = model.required<Task>();
+  readonly task = input.required<Task>();
   readonly index = input.required<number>();
 
   // Propriétés de sortie
