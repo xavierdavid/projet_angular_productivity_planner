@@ -69,41 +69,39 @@ export const WorkdayStore = signalStore(
       // Démarrage d'un flux avec un Observable (méthode 'timer' de RXJS) pour gérer lancement du chronomètre (gestion du temps - Décompte des secondes écoulées)
       timer(0, 1000).pipe(takeUntil(pomodoroCompleted), takeUntilDestroyed(destroyRef)).subscribe((elapsedSeconds: number) => {
         console.log('elapsedSeconds', elapsedSeconds);
-        patchState(store, () => {
-          return { progress: elapsedSeconds };
-        });
         
-        // Récupération de la tâche courante dans le tableau Workday
-        const task = getActiveTask(store.taskList());
-        if(!task){
-          throw new Error('No active task found');
-        }
-        
-        // Récupération de l'index de la tâche courante dans le tableau Workday
-        const taskIndex = getActiveTaskIndex(store.taskList());
-         
-        // Récupération de l'index du pomodoro actif de la Workday
-        const pomodoroIndex = getActivePomodoroIndex(task);
-        if(pomodoroIndex === -1) {
-          throw new Error('No active pomodoro found');
-        }
+        patchState(store, { progress: elapsedSeconds });
       
-        // Mise à jour et reconstruction de la tâche - Incrémentation du timer du pomodoro actif (à l'index du pomodoro actif) - Mise à jour le temps écoulé
-        task.pomodoroList[pomodoroIndex] = elapsedSeconds;
+        patchState(store, (state) => {
+          // Récupération de la tâche courante dans le tableau Workday
+          const task = getActiveTask(state.taskList);
+          // Récupération de l'index de la tâche courante dans le tableau Workday
+          const taskIndex = getActiveTaskIndex(store.taskList());
+          if(!task){
+            throw new Error('No active task found');
+          }
 
-        // Mise à jour de l'emoji de statut de la tâche
-        task.statusEmoji = getTaskEmojiStatus(task);
+          // Récupération de l'index du pomodoro actif de la Workday
+          const pomodoroIndex = getActivePomodoroIndex(task);
+          if(pomodoroIndex === -1) {
+            throw new Error('No active pomodoro found');
+          }
 
-        // Récupération de la liste des tâches mise à jour à partir du store
-        const taskList: TaskList = store
-        .taskList()
-        // On remplace dans la taskList la tâche courante par la tâche mise à jour 
-        .toSpliced(taskIndex, 1, task);
-        
-        // Patch de la liste des tâches mise à jour dans le store
-        patchState(store,() => {
+          // Mise à jour et reconstruction de la tâche - Incrémentation du timer du pomodoro actif (à l'index du pomodoro actif) - Mise à jour le temps écoulé
+          task.pomodoroList[pomodoroIndex] = elapsedSeconds;
+
+          // Mise à jour de l'emoji de statut de la tâche
+          task.statusEmoji = getTaskEmojiStatus(task);
+
+          // Récupération de la liste des tâches mise à jour à partir du store
+          const taskList: TaskList = store
+          .taskList()
+          // On remplace dans la taskList la tâche courante par la tâche mise à jour 
+          .toSpliced(taskIndex, 1, task);
+       
+          // Patch de la liste des tâches mise à jour dans le store
           return { taskList };
-        })
+        });
         
         // Gestion de la complétude des états ...
 
@@ -111,10 +109,8 @@ export const WorkdayStore = signalStore(
         if(elapsedSeconds === MAXIMUM_POMODORO_DURATION) {
           // Alors on se désabonne ... (déclaration d'un 'subject') - N.B. Le timer peut s'arrêter pour 3 raisons : 1. On quitte le composant (il est détruit) - 2. l'utilisateur à cliqué sur 'completed pomodoro' (évènement utilisateur stocké dans un 'subject') - 3. Evènement programmatique (Subject) déclenché lorsque la durée du pomodoro écoulée):
           pomodoroCompleted.next();
-          // On repasse en mode 'edit' pour permettre à l'utilisateur de valider le pomodoro complété
-          patchState(store, { mode: 'edit' });
-          // On réinitialise le compteur de progression
-          patchState(store, { progress: 0 });
+          // On repasse en mode 'edit' pour permettre à l'utilisateur de valider le pomodoro complété et on réinitiaise le compteur de progression
+          patchState(store, { mode: 'edit', progress: 0 });
         }
 
       });
