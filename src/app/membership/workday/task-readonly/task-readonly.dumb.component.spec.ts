@@ -18,7 +18,8 @@ describe('TaskReadonlyDumbComponent', () => {
     fixture.componentRef.setInput('task', {
       id: '1',
       title: 'Test task',
-      completed: false
+      completed: false,
+      pomodoroList: []
     } as unknown as Task);
 
     fixture.componentRef.setInput('index', 0);
