@@ -94,6 +94,21 @@ export function getActivePomodoroIndex(task: Task): number | -1 {
   return task.pomodoroList.findIndex((pomodoro) => !isPomodoroCompleted(pomodoro));
 }
 
+// Création de la liste des pomodoros en fonction du nombre de pomodoros
+export function createPomodoroList(count: PomodoroCount): PomodoroList {
+  switch (count) {
+    case 1:
+      return [0];
+    case 2:
+      return [0, 0];
+    case 3:
+      return [0, 0, 0];
+    case 4:
+      return [0, 0, 0, 0];
+    case 5:
+      return [0, 0, 0, 0, 0];
+  }
+}
 
 /* View model methods */
 export function getTaskEmojiStatus(task: Task): string {
