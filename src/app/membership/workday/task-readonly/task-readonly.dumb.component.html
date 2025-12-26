@@ -1,1 +1,26 @@
-<p>task-readonly works!</p>
+<!-- Affichage de la tâche et de son formulaire en mode readonly lorsque la tâche adébuté-->
+
+<div class="d-flex align-items-center">
+    <!-- Affichage de l'emoji en fonction du type de la tâche -->
+    @if(task().type === 'Hit the target') {
+        <p class="w-auto me-3">🎯</p>     
+    } @else {
+        <p class="w-auto me-3">⛳️</p>     
+    }
+    <!-- Affichage du titre de la tâche -->
+    <p class="form-control flex-grow-1 fs-5 border-0" [attr.data-testid]="`task-input-${index()}`">
+        {{ task().title }}
+    </p>
+    
+    <!-- Affichage du nombre de pomodoro sélectionné et de l'emoji 'in progress'-->
+    <div class="d-flex align-items-center ms-3"> 
+        <p class="w-auto me-3"> {{ task().pomodoroCount }}</p>
+        <button class="btn btn-sm">⏸</button>
+        <button class="btn btn-sm">⏸</button>
+        <button class="btn btn-sm">⏸</button>
+        <button class="btn btn-sm">⏸</button>
+        <button class="btn btn-sm">⏸</button>
+        <span class="mx-3 fs-5">0</span>
+        <span>🔄</span>
+    </div>
+  </div>  
