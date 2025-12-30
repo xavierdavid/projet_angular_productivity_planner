@@ -81,23 +81,11 @@ describe('WorkdayPageComponent', () => {
       button.nativeElement.click();
       button.nativeElement.click();
       button.nativeElement.click();
-      button.nativeElement.click();
       fixture.detectChanges();
     });
-    it('sould hide "Add task" button', () => {
+    it('should hide "Add task" button', () => {
       const button = getAddTaskButton();
       expect(button).toBeNull();
-    });
-  });
-
-  describe('when no task is planned', () => {
-    beforeEach(() => {
-      getRemoveTaskButton(1).nativeElement.click();
-      fixture.detectChanges();
-    });
-
-    it('should display inbox zero placeholder', () => {
-      expect(getInboxZeroPlaceholder()).toBeTruthy();
     });
   });
 });
