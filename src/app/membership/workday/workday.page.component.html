@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <div class="container my-5">
-  <pre>{{ store.taskList() | json }}</pre>
+  <pre>{{ workday().taskList | json }}</pre>
   <!-- Header avec date centrée et bouton à droite -->
   <div class="row align-items-center mb-4">
     <div class="col-md-4"></div>
     <div class="col-md-4 text-center">
       <h6 class="mb-2">Working Day</h6>
       <!-- Sélection de la date - Ecoute de l'évènement 'change'-->
-      <input type="date" class="form-control" [value]="store.date()" (change)="store.updateDate($event)" [disabled]="store.isExecutionMode() || store.isWorkdayCompleted()"/>
+      <input type="date" class="form-control" [value]="workday().date" (change)="updateDate($event)" [disabled]="workday().isExecutionMode || workday().isWorkdayCompleted"/>
       <!-- Affichage de la barre de progression lorsque l'on passe en mode 'execution'-->
-      @if(store.isExecutionMode()) {
+      @if(workday().isExecutionMode) {
         <div class="d-flex flex-column align-items mt-2">
           <div class="progress w-100" data-testid="workday-progress">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar"
-            [style.width.%]="store.pomodoroProgress()" [attr.aria-valuenow]="store.pomodoroProgress()" aria-valuemin="0"
+            [style.width.%]="pomodoroProgress()" [attr.aria-valuenow]="pomodoroProgress()" aria-valuemin="0"
             aria-valuemax="100">
-            {{store.pomodoroProgress()}}%
+            {{ pomodoroProgress() }}%
             </div>
           </div>
-          <p class="text-muted small mt-2 text-center w-100">{{ store.progress() }} seconds have passed.</p>
+          <p class="text-muted small mt-2 text-center w-100">{{ progress() }} seconds have passed.</p>
         </div>
       }
     </div>
   <!-- Si une tâche est planifiée ou si on est en mode 'edit' -->
-  @if(store.hasTaskPlanned() && store.isEditMode() && !store.isWorkdayCompleted()) {
+  @if(workday().hasTaskPlanned && workday().isEditMode && !workday().isWorkdayCompleted) {
     <div class="col-md-4 text-end mt-3 mt-md-0">
-      <button class="btn btn-success rounded-pill px-4 py-2 fw-bold" (click)="store.startworkday()">
+      <button class="btn btn-success rounded-pill px-4 py-2 fw-bold" (click)="startWorkday()">
         Start the work day
       </button>
     </div>
@@ -33,7 +33,7 @@
   </div>
 
   <!-- Si aucune tâche n'est planifiée -->
-  @if(store.hasNoTaskPlanned() && store.isEditMode()) {
+  @if(workday().hasNoTaskPlanned && workday().isEditMode) {
   <div class="text-center my-5" data-testid="inbox-zero-placeholder">
     <!-- Image et texte à afficher -->
     <img src="images/productivity-planner-inbox-zero.gif" alt="Inbox zero" class="img-fluid mx-auto" />
@@ -42,7 +42,7 @@
   }
 
   <!-- Boucle sur les tâches à afficher -->
-  @for(task of store.taskList(); track $index) {
+  @for(task of workday().taskList; track $index) {
     <!--Titre de la tâche -->
     @if($index === 0) {
       <h6 class="mb-3 text-muted">Most important task</h6>
@@ -55,18 +55,18 @@
     }
 
     <!-- Affichage du composant Task-->
-    @if(store.isEditMode() && !store.isWorkdayCompleted() && !store.isTaskCompleted(task)) {
-      <app-task-field class="p-3 mb-3" [task]="task" [index]="$index" (taskUpdated)="store.updateTask($index, $event)" (taskRemoved)="store.removeTask($index)" />
+    @if(workday().isEditMode && !workday().isWorkdayCompleted && !workday().isTaskCompleted(task)) {
+      <app-task-field class="p-3 mb-3" [task]="task" [index]="$index" (taskUpdated)="updateTask($index, $event)" (taskRemoved)="removeTask($index)" />
     }
-    @if(store.isExecutionMode() || store.isWorkdayCompleted() || store.isTaskCompleted(task)) {
+    @if(workday().isExecutionMode || workday().isWorkdayCompleted || workday().isTaskCompleted(task)) {
       <app-task-readonly [task]="task" [index]="$index"/>
     }
   }
 
   <!-- Ajouter une tâche -->
   <div class="text-center">
-    @if(store.isButtonDisplayed()) {
-    <button data-testid="add-task-button" class="btn btn-link text-muted" (click)="store.addTask()">Ajouter une tâche</button>
+    @if(workday().canAddTask) {
+    <button data-testid="add-task-button" class="btn btn-link text-muted" (click)="addTask()">Ajouter une tâche</button>
     }
   </div>
 </div>
